@@ -1,26 +1,52 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+@theme {
+  --color-leaf-50: #f0f7ef;
+  --color-leaf-100: #dcebd8;
+  --color-leaf-200: #b9d7b2;
+  --color-leaf-600: #3f7f3a;
+  --color-leaf-700: #2f662c;
+  --color-leaf-800: #244f23;
+  --color-leaf-900: #1b3b1a;
+
+  --color-coffee-50: #faf6f2;
+  --color-coffee-100: #f1e8df;
+  --color-coffee-200: #e2d1c0;
+  --color-coffee-500: #9a7656;
+  --color-coffee-600: #7d5c40;
+  --color-coffee-700: #634631;
+  --color-coffee-800: #4a3424;
+  --color-coffee-900: #33231a;
+}
+
+:root {
+  color-scheme: light;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-coffee-50);
+  color: var(--color-coffee-900);
+}
+
+@layer components {
+  .card {
+    @apply rounded-2xl border border-coffee-200 bg-white p-4 shadow-sm sm:p-6;
+  }
+  .btn-primary {
+    @apply inline-flex items-center justify-center rounded-lg bg-leaf-700 px-4 py-2 font-semibold text-white hover:bg-leaf-800 disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  .btn-secondary {
+    @apply inline-flex items-center justify-center rounded-lg border border-coffee-200 bg-white px-4 py-2 font-medium text-coffee-800 hover:bg-coffee-50 disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  .input {
+    @apply w-full rounded-lg border border-coffee-200 bg-white px-3 py-2 text-coffee-900 outline-none focus:border-leaf-600 focus:ring-2 focus:ring-leaf-100;
+  }
+  .label {
+    @apply mb-1 block text-sm font-medium text-coffee-800;
+  }
 }
