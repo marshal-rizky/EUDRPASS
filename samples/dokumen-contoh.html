@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>EUDRPass - dokumen contoh untuk uji ekstraksi (SPESIMEN)</title>
+<style>
+  @page { size: A4; margin: 0; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #ddd; font-family: "Times New Roman", serif; color: #111; }
+  .page {
+    width: 210mm; height: 297mm; margin: 10mm auto; padding: 18mm 20mm;
+    background: #fffdf6; position: relative; overflow: hidden; page-break-after: always;
+  }
+  @media print { body { background: none; } .page { margin: 0; box-shadow: none; } .hint { display: none; } }
+  .hint { max-width: 210mm; margin: 10mm auto 0; font: 14px/1.5 system-ui, sans-serif; }
+  .wm {
+    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    font: 700 64px/1 Arial, sans-serif; color: rgba(200, 0, 0, .13); transform: rotate(-35deg);
+    pointer-events: none; text-align: center;
+  }
+  .frame { border: 3px double #3a4a2a; height: 100%; padding: 12mm 12mm; position: relative; }
+  .head { text-align: center; border-bottom: 1.5px solid #333; padding-bottom: 5mm; margin-bottom: 7mm; }
+  .head .org { font-size: 15px; letter-spacing: 1px; }
+  .head h1 { font-size: 26px; margin: 3mm 0 1mm; letter-spacing: 2px; }
+  .head .no { font-size: 15px; }
+  table { width: 100%; border-collapse: collapse; font-size: 15px; }
+  td { padding: 2.2mm 0; vertical-align: top; }
+  td.k { width: 48mm; }
+  td.c { width: 6mm; }
+  .box { border: 1px solid #555; padding: 4mm; margin-top: 6mm; font-size: 13.5px; line-height: 1.5; }
+  .sign { position: absolute; bottom: 24mm; right: 14mm; width: 70mm; text-align: center; font-size: 14px; }
+  .sign .space { height: 22mm; }
+  .stamp {
+    position: absolute; bottom: 30mm; right: 50mm; width: 34mm; height: 34mm; border: 2px solid rgba(40, 60, 160, .55);
+    border-radius: 50%; color: rgba(40, 60, 160, .6); font: 700 10px/1.2 Arial, sans-serif;
+    display: flex; align-items: center; justify-content: center; text-align: center; transform: rotate(-12deg);
+  }
+  .foot {
+    position: absolute; bottom: 8mm; left: 12mm; right: 12mm; font: 700 11px/1.3 Arial, sans-serif;
+    color: #a00; text-align: center; border-top: 1px dashed #a00; padding-top: 2mm;
+  }
+  .hand { font-family: "Segoe Script", "Bradley Hand", "Comic Sans MS", cursive; font-size: 17px; color: #13307a; }
+  .sketch { border: 1px solid #555; height: 34mm; margin-top: 5mm; position: relative; font: 11px Arial, sans-serif; }
+  .sketch svg { width: 100%; height: 100%; }
+</style>
+</head>
+<body>
+
+<div class="hint">
+  <b>Cara pakai:</b> Ctrl+P, kertas A4, margin "None", centang "Background graphics". Cetak, lalu foto pakai HP
+  (coba juga sudut miring / cahaya redup) dan upload ke <code>/api/extract</code>.<br>
+  Semua nama, nomor dan lokasi rinci di bawah ini <b>fiktif</b>. Setiap halaman bertanda SPESIMEN, bukan dokumen resmi.
+</div>
+
+<!-- 1. SHM: 10.000 m2 = 1,00 ha arabika -> cap 877 kg, cocok dengan plot demo SEED_DEMO -->
+<section class="page">
+  <div class="wm">SPESIMEN<br>BUKAN DOKUMEN RESMI</div>
+  <div class="frame">
+    <div class="head">
+      <div class="org">BADAN PERTANAHAN NASIONAL<br>KANTOR PERTANAHAN KABUPATEN ACEH TENGAH</div>
+      <h1>SERTIPIKAT HAK MILIK</h1>
+      <div class="no">Nomor Hak Milik: <b>01.07.05.12.1.00873</b></div>
+    </div>
+    <table>
+      <tr><td class="k">Provinsi</td><td class="c">:</td><td>Aceh</td></tr>
+      <tr><td class="k">Kabupaten</td><td class="c">:</td><td>Aceh Tengah</td></tr>
+      <tr><td class="k">Kecamatan</td><td class="c">:</td><td>Bebesen</td></tr>
+      <tr><td class="k">Desa / Kelurahan</td><td class="c">:</td><td>Kemili</td></tr>
+      <tr><td class="k">Nama Pemegang Hak</td><td class="c">:</td><td><b>CONTOH ARIFIN SAPUTRA</b></td></tr>
+      <tr><td class="k">Luas</td><td class="c">:</td><td><b>10.000 M²</b> (sepuluh ribu meter persegi)</td></tr>
+      <tr><td class="k">Surat Ukur</td><td class="c">:</td><td>No. 00412/Kemili/2019, tanggal 14-03-2019</td></tr>
+      <tr><td class="k">Penggunaan Tanah</td><td class="c">:</td><td>Kebun kopi arabika</td></tr>
+      <tr><td class="k">Asal Hak</td><td class="c">:</td><td>Konversi</td></tr>
+    </table>
+    <div class="box">
+      Petunjuk batas: Utara berbatasan dengan jalan desa; Timur dengan kebun milik CONTOH RAHMAN;
+      Selatan dengan alur sungai; Barat dengan kebun milik CONTOH SITI AMINAH.
+    </div>
+    <div class="stamp">SPESIMEN<br>KANTAH<br>ACEH TENGAH</div>
+    <div class="sign">Takengon, 02-05-2019<br>Kepala Kantor Pertanahan<div class="space"></div><u>CONTOH IR. HASAN BASRI</u><br>NIP. 000000000000000000</div>
+    <div class="foot">DOKUMEN CONTOH UNTUK PENGUJIAN EUDRPASS. FIKTIF, BUKAN SERTIPIKAT ASLI, TIDAK BERLAKU UNTUK KEPERLUAN APA PUN.</div>
+  </div>
+</section>
+
+<!-- 2. SKT: isian tulisan tangan, satuan Ha dengan koma desimal (1,50 Ha) robusta -> cap 1.210 kg -->
+<section class="page">
+  <div class="wm">SPESIMEN<br>BUKAN DOKUMEN RESMI</div>
+  <div class="frame">
+    <div class="head">
+      <div class="org">PEMERINTAH KABUPATEN TANGGAMUS<br>KECAMATAN PULAU PANGGUNG<br>KANTOR KEPALA PEKON SIDOREJO</div>
+      <h1>SURAT KETERANGAN TANAH</h1>
+      <div class="no">Nomor: <span class="hand">470 / 118 / SKT / 2021</span></div>
+    </div>
+    <p style="font-size:15px;line-height:1.6">Yang bertanda tangan di bawah ini Kepala Pekon Sidorejo menerangkan bahwa:</p>
+    <table>
+      <tr><td class="k">Nama</td><td class="c">:</td><td class="hand">Contoh Sumarni</td></tr>
+      <tr><td class="k">Umur / Pekerjaan</td><td class="c">:</td><td class="hand">47 th / Petani</td></tr>
+      <tr><td class="k">Alamat</td><td class="c">:</td><td class="hand">Dusun III, Pekon Sidorejo</td></tr>
+    </table>
+    <p style="font-size:15px;line-height:1.6">adalah benar menguasai sebidang tanah kebun dengan keterangan:</p>
+    <table>
+      <tr><td class="k">Letak tanah</td><td class="c">:</td><td class="hand">Pekon Sidorejo, Kec. Pulau Panggung</td></tr>
+      <tr><td class="k">Luas</td><td class="c">:</td><td class="hand">± 1,50 Ha (satu setengah hektar)</td></tr>
+      <tr><td class="k">Ditanami</td><td class="c">:</td><td class="hand">Kopi robusta</td></tr>
+      <tr><td class="k">Diperoleh dari</td><td class="c">:</td><td class="hand">Warisan orang tua, 2008</td></tr>
+    </table>
+    <div class="sketch">
+      <svg viewBox="0 0 400 160"><polygon points="60,20 330,35 350,130 40,140" fill="none" stroke="#333" stroke-width="1.5"/>
+        <text x="170" y="15">U: jalan setapak</text><text x="170" y="155">S: kebun Contoh Paijo</text>
+        <text x="352" y="85">T</text><text x="20" y="85">B</text><text x="150" y="88" font-size="13">Sketsa ± 1,5 Ha</text></svg>
+    </div>
+    <p style="font-size:14px">Demikian surat keterangan ini dibuat untuk dipergunakan sebagaimana mestinya.</p>
+    <div class="stamp" style="bottom:26mm;right:60mm">SPESIMEN<br>PEKON<br>SIDOREJO</div>
+    <div class="sign" style="position:static;margin:0 0 0 auto">Sidorejo, <span class="hand">9 Agustus 2021</span><br>Kepala Pekon Sidorejo<div class="space" style="height:12mm"></div><u>CONTOH WARSITO</u></div>
+    <div class="foot">DOKUMEN CONTOH UNTUK PENGUJIAN EUDRPASS. FIKTIF, BUKAN DOKUMEN ASLI, TIDAK BERLAKU UNTUK KEPERLUAN APA PUN.</div>
+  </div>
+</section>
+
+<!-- 3. STDB: luas dalam 'are' (85 are = 0,85 ha) arabika -> cap 745 kg. Uji konversi satuan. -->
+<section class="page">
+  <div class="wm">SPESIMEN<br>BUKAN DOKUMEN RESMI</div>
+  <div class="frame">
+    <div class="head">
+      <div class="org">PEMERINTAH KABUPATEN BENER MERIAH<br>DINAS PERTANIAN DAN PERKEBUNAN</div>
+      <h1>SURAT TANDA DAFTAR BUDIDAYA</h1>
+      <div class="no">(STD-B) Nomor: <b>525/STDB/BM/0457/2022</b></div>
+    </div>
+    <table>
+      <tr><td class="k" colspan="3"><b>A. Data Pemilik</b></td></tr>
+      <tr><td class="k">Nama</td><td class="c">:</td><td>CONTOH MUHAMMAD YUSUF</td></tr>
+      <tr><td class="k">NIK</td><td class="c">:</td><td>0000 0000 0000 0000</td></tr>
+      <tr><td class="k" colspan="3"><b>B. Data Kebun</b></td></tr>
+      <tr><td class="k">Desa</td><td class="c">:</td><td>Simpang Teritit</td></tr>
+      <tr><td class="k">Kecamatan</td><td class="c">:</td><td>Wih Pesam</td></tr>
+      <tr><td class="k">Kabupaten</td><td class="c">:</td><td>Bener Meriah</td></tr>
+      <tr><td class="k">Status Kepemilikan</td><td class="c">:</td><td>SKT No. 593/021/2015</td></tr>
+      <tr><td class="k">Luas Areal</td><td class="c">:</td><td><b>85 are</b></td></tr>
+      <tr><td class="k">Jenis Tanaman</td><td class="c">:</td><td>Kopi arabika (Gayo 1)</td></tr>
+      <tr><td class="k">Jumlah Pohon</td><td class="c">:</td><td>1.360 batang</td></tr>
+      <tr><td class="k">Tahun Tanam</td><td class="c">:</td><td>2016</td></tr>
+      <tr><td class="k">Koordinat</td><td class="c">:</td><td>4°43'xx" LU, 96°49'xx" BT (disamarkan)</td></tr>
+    </table>
+    <div class="stamp">SPESIMEN<br>DISTANBUN<br>BENER MERIAH</div>
+    <div class="sign">Simpang Tiga Redelong, 21-06-2022<br>Kepala Dinas<div class="space"></div><u>CONTOH IR. ZULKIFLI</u><br>NIP. 000000000000000000</div>
+    <div class="foot">DOKUMEN CONTOH UNTUK PENGUJIAN EUDRPASS. FIKTIF, BUKAN DOKUMEN ASLI, TIDAK BERLAKU UNTUK KEPERLUAN APA PUN.</div>
+  </div>
+</section>
+
+</body>
+</html>
