@@ -23,7 +23,21 @@ contracts/   Foundry: PlotRegistry.sol, DeliveryLedger.sol, 37 test (unit, adver
 web/         Next.js 16 + wagmi/viem. Halaman: /register /deliver /ship /verify/[id] /plot/[id]
 web/app/api  /api/ipfs (pin dokumen ke Pinata), /api/extract (baca SHM/SKT/STDB dengan Claude Haiku 5.5)
 samples/     Dokumen contoh FIKTIF bertanda SPESIMEN untuk uji ekstraksi (cetak lalu foto)
+  shm-contoh.pdf        SHM 1 halaman, 10.000 m² (dipakai plot seed)
+  dokumen-contoh.*      SHM + SKT + STDB (3 halaman) untuk dicetak
+  foto-simulasi/*.png   foto HP simulasi tiap dokumen: -mild (sedikit miring) dan -hard (miring, blur, redup, silau)
 ```
+
+### Hasil uji ekstraksi (`/api/extract`, Claude Haiku 5.5, 21 Nov 2026)
+
+| Foto | Waktu | Luas → `hectaresE2` | Catatan |
+|---|---|---|---|
+| shm-mild / shm-hard | 7 / 11 dtk | 10.000 m² → 100 | semua field benar |
+| skt-mild / skt-hard | 10 / 13 dtk | 1,5 ha → 150 | benar; versi hard menandai nama & luas untuk review |
+| stdb-mild / stdb-hard | 9 / 12 dtk | 85 are → 85 | hard: desa kosong, kecamatan salah, tetapi ditandai `needsReview` |
+
+Luas (penentu batas panen) benar di 6/6 foto. Field yang salah selalu masuk `needsReview`, jadi petugas wajib
+memeriksa sebelum mint. Ekstraksi butuh 7–13 detik.
 
 ## Menjalankan
 
@@ -54,10 +68,26 @@ npm run dev
 Tanpa `PINATA_JWT` dokumen tidak diunggah (CID diganti `sha256-…`); tanpa `ANTHROPIC_API_KEY` ekstraksi AI
 mati dan form diisi manual. Keduanya opsional.
 
+## Deploy web (Vercel)
+
+Project Vercel di-import dari repo GitHub ini dengan **Root Directory `web`**. Setiap push ke `main` otomatis
+deploy ulang. Env di Vercel (Settings → Environment Variables) sama dengan `web/.env.local`:
+`NEXT_PUBLIC_CHAIN=amoy`, `NEXT_PUBLIC_RPC_URL`, `NEXT_PUBLIC_PLOT_REGISTRY`, `NEXT_PUBLIC_DELIVERY_LEDGER`,
+`NEXT_PUBLIC_DEPLOY_BLOCK`, `PINATA_JWT`, `ANTHROPIC_API_KEY`. Variabel `NEXT_PUBLIC_*` dibaca saat build, jadi
+setelah mengubahnya lakukan **Redeploy**.
+
+`/api/extract` dan `/api/ipfs` di URL publik bisa dipanggil siapa saja dan memakai kredit Anthropic/Pinata kita:
+pasang batas pengeluaran di console Anthropic, dan hapus env key-nya setelah hackathon.
+
 ## Catatan Amoy
 
-- RPC bawaan `rpc-amoy.polygon.technology` tidak resolve. Pakai `https://polygon-amoy-bor-rpc.publicnode.com`
-  atau `https://polygon-amoy.drpc.org` (juga di setting network MetaMask). Untuk demo, RPC Alchemy lebih stabil.
+- RPC bawaan `rpc-amoy.polygon.technology` tidak resolve. Pakai RPC Alchemy
+  (`https://polygon-amoy.g.alchemy.com/v2/<key>`, buat app chain Polygon PoS di dashboard.alchemy.com) atau publik
+  `https://polygon-amoy-bor-rpc.publicnode.com` / `https://polygon-amoy.drpc.org`. Pasang URL yang sama di
+  `NEXT_PUBLIC_RPC_URL` **dan** di setting network MetaMask. RPC publik sesekali rate-limit ("Internal JSON-RPC
+  error" di MetaMask); Alchemy lebih stabil. Key Alchemy ikut ke browser (`NEXT_PUBLIC_*`): bagikan lewat DM, bukan repo.
+- QR dibuat dari `window.location.origin`. Dibuka di `localhost`, QR berisi `localhost` dan tidak bisa dipindai HP
+  lain: untuk demo pakai URL Vercel (lihat bawah).
 - Node Polygon menolak priority fee < 25 gwei; web mengirim fee sendiri (`web/lib/fees.ts`, tip ≥ 30 gwei).
 - POL testnet: https://faucet.polygon.technology
 
