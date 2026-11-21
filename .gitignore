@@ -21,3 +21,4 @@ Thumbs.db
 .vscode/
 .idea/
 contracts/broadcast/**/dry-run/
+contracts/broadcast/**/run-[0-9]*.json

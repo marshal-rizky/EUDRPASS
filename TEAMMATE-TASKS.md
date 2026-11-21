@@ -66,7 +66,19 @@ NEXT_PUBLIC_DELIVERY_LEDGER=0x...
 MetaMask: tambah network Anvil (RPC `http://127.0.0.1:8545`, chain id `31337`), import key di atas.
 Kalau Anvil di-restart: MetaMask → Settings → Advanced → *Clear activity tab data* (nonce mismatch).
 
-Alamat Polygon Amoy akan dikirim Marshal lewat chat setelah deploy.
+**Polygon Amoy (sudah deploy, 21 Nov 2026):**
+
+```
+NEXT_PUBLIC_CHAIN=amoy
+NEXT_PUBLIC_RPC_URL=https://polygon-amoy-bor-rpc.publicnode.com
+NEXT_PUBLIC_PLOT_REGISTRY=0x65709b17AB09c8eaA88dA05b1563d1cEa9312b1a
+NEXT_PUBLIC_DELIVERY_LEDGER=0xCE46ccD129fC308687804c8E0F3Ca3baE740B6E8
+NEXT_PUBLIC_DEPLOY_BLOCK=53418689
+```
+
+- `rpc-amoy.polygon.technology` (default viem/MetaMask) tidak resolve; pakai publicnode di atas atau `https://polygon-amoy.drpc.org`, juga di setting network MetaMask.
+- Node Polygon menolak priority fee < 25 gwei. `web/lib/fees.ts` sudah mengirim fee sendiri (tip ≥ 30 gwei); jangan hapus `...fees` di pemanggilan `write(...)`.
+- Plot #1 di Amoy memakai CID placeholder (link IPFS-nya 400). Untuk demo pakai plot #2 / shipment #1, atau daftar plot baru dari `samples/shm-contoh.pdf`. Deploy berikutnya sudah memakai CID asli.
 
 ---
 
