@@ -6,6 +6,10 @@ Setiap lahan didaftarkan sebagai **PlotPassport** (ERC-721 soulbound) dengan bat
 Kontrak **menolak** setiap pengiriman yang membuat total musim sebuah lahan melebihi batasnya, dan setiap
 pengiriman hanya bisa masuk satu shipment. Pembeli memverifikasi shipment lewat QR, tanpa wallet.
 
+**Live:** https://eudrpass.vercel.app · contoh bukti: https://eudrpass.vercel.app/verify/1 · paspor lahan: https://eudrpass.vercel.app/plot/2
+
+Screenshot aplikasi (diambil dari URL live, untuk materi presentasi) ada di `presentation/screenshots/`.
+
 ## Deploy aktif: Polygon Amoy (chain 80002)
 
 | Kontrak | Alamat |
