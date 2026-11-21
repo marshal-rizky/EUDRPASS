@@ -137,7 +137,8 @@ Events: `Delivered(deliveryId indexed, plotId indexed, season indexed, kg, seaso
     docType: "SHM" | "SKT" | "STDB" | "OTHER" | "UNREADABLE";
     parcelId: string | null; ownerName: string | null;
     areaValue: number | null; areaUnit: "m2" | "ha" | "are" | null;
-    areaHa: number | null;            // sudah dikonversi + dibulatkan 2 desimal → hectaresE2 = round(areaHa*100)
+    areaHa: number | null;            // sudah dikonversi ke ha, dibulatkan KE BAWAH ke 0,01 ha
+    hectaresE2: number | null;        // = areaHa × 100, integer, langsung untuk registerPlot(hectaresE2)
     village: string | null; district: string | null; regency: string | null;
   };
   confidence: { docType; parcelId; ownerName; area; village; district; regency: number }; // 0..1
