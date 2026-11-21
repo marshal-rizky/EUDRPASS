@@ -119,12 +119,37 @@ Events: `Delivered(deliveryId indexed, plotId indexed, season indexed, kg, seaso
 | panic tanpa nama | "DITOLAK — nilai di luar rentang" (jangan pernah tampil "undefined") |
 
 ### API server (dikerjakan Marshal, pakai kontrak ini)
-- `POST /api/ipfs` (multipart, field `file`) → `{ cid: string, url: string }`
-- `POST /api/extract` (multipart, field `file`) →
-  `{ fields: { docType, parcelId, ownerName, areaValue, areaUnit, areaHa, village, district }, confidence: Record<field, number>, needsReview: string[] }`
+**Sudah tersedia** (`web/app/api/`). Keduanya menerima multipart field `file`: JPEG / PNG / WebP / PDF, maks 10 MB.
 
-Sampai endpoint siap, pakai fallback: CID = hash lokal file (`sha256`), ekstraksi = input manual.
-Kalau endpoint error/timeout, **UI harus tetap jalan dengan input manual** (F2 itu sidecar yang bisa dilepas).
+**`POST /api/ipfs`** → 200
+```ts
+{ cid: string; url: string | null; sha256: string; pinned: boolean }
+```
+- Dengan `PINATA_JWT`: file di-pin, `cid` = CID IPFS asli, `url` = link gateway, `pinned: true`.
+- Tanpa `PINATA_JWT` (dev lokal): **tidak diunggah ke mana pun**; `cid = "sha256-<hex>"`, `url: null`, `pinned: false`.
+  UI wajib menampilkan status ini dengan jujur (mis. badge "belum di-pin"), jangan tampilkan link palsu.
+- `cid` inilah yang dikirim ke `registerPlot(docCID, ...)`.
+
+**`POST /api/extract`** → 200
+```ts
+{
+  fields: {
+    docType: "SHM" | "SKT" | "STDB" | "OTHER" | "UNREADABLE";
+    parcelId: string | null; ownerName: string | null;
+    areaValue: number | null; areaUnit: "m2" | "ha" | "are" | null;
+    areaHa: number | null;            // sudah dikonversi + dibulatkan 2 desimal → hectaresE2 = round(areaHa*100)
+    village: string | null; district: string | null; regency: string | null;
+  };
+  confidence: { docType; parcelId; ownerName; area; village; district; regency: number }; // 0..1
+  needsReview: string[];   // nama field yang WAJIB dicek manual (confidence < 0.8, kosong, atau di luar 0,1–50 ha)
+  issues: string[];        // pesan validasi siap tampil (Bahasa Indonesia)
+  notes: string; model: string;
+}
+```
+- Error: `400/413/415` upload salah, `422` dokumen ditolak model, `429` rate limit, `502` ekstraksi gagal,
+  `503` layanan AI tidak tersedia/belum dikonfigurasi. Semua error berbentuk `{ error: string }` (pesan siap tampil).
+- Butuh 5–20 detik → tampilkan loading. **Apa pun errornya, form manual tetap bisa dipakai** (F2 sidecar yang bisa dilepas).
+- `ownerName` adalah data pribadi: tampilkan untuk dicek petugas, **jangan pernah** dikirim ke chain atau disimpan.
 
 ---
 
