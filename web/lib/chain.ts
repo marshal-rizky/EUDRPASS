@@ -1,7 +1,8 @@
 import { http } from "viem";
-import { anvil, polygonAmoy } from "viem/chains";
+import { anvil } from "viem/chains";
 import { createConfig, injected } from "wagmi";
 import { env } from "./env";
+import { amoy } from "./publicClient";
 
 export { chain, publicClient, txUrl } from "./publicClient";
 
@@ -9,11 +10,11 @@ const rpcFor = (name: typeof env.chain) => (env.chain === name ? env.rpcUrl : un
 
 /** Wallet connection + writes only. Reads use `publicClient`. */
 export const wagmiConfig = createConfig({
-  chains: [anvil, polygonAmoy],
+  chains: [anvil, amoy],
   connectors: [injected()],
   transports: {
     [anvil.id]: http(rpcFor("anvil")),
-    [polygonAmoy.id]: http(rpcFor("amoy")),
+    [amoy.id]: http(rpcFor("amoy")),
   },
   ssr: true,
 });
