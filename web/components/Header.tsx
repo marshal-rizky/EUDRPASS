@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useSyncExternalStore } from "react";
 import {
   ProviderNotFoundError,
   useConnect,
@@ -38,7 +39,7 @@ export function Header() {
               <Link
                 key={n.href}
                 href={n.href}
-                className={`rounded-md px-3 py-1.5 whitespace-nowrap ${
+                className={`rounded-md px-3 py-2 whitespace-nowrap ${
                   active ? "bg-leaf-100 font-semibold text-leaf-800" : "text-coffee-700 hover:bg-coffee-50"
                 }`}
               >
@@ -55,6 +56,26 @@ export function Header() {
   );
 }
 
+const noop = () => () => {};
+
+/**
+ * Phone browsers have no MetaMask extension. There the wallet lives in the MetaMask app,
+ * so we hand back a deep link that reopens this page inside the app's own browser.
+ */
+function useMetaMaskDeepLink(): string | null {
+  return useSyncExternalStore(
+    noop,
+    () => {
+      const hasProvider = "ethereum" in window && window.ethereum != null;
+      const mobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+      if (hasProvider || !mobile) return null;
+      const { host, pathname, search } = window.location;
+      return `https://metamask.app.link/dapp/${host}${pathname}${search}`;
+    },
+    () => null,
+  );
+}
+
 function Wallet() {
   const { address, status, chainId } = useConnection();
   const connectors = useConnectors();
@@ -62,6 +83,15 @@ function Wallet() {
   const { mutate: disconnect } = useDisconnect();
   const switchChain = useSwitchChain();
   const roles = useRoles(address);
+  const deepLink = useMetaMaskDeepLink();
+
+  if ((status !== "connected" || !address) && deepLink) {
+    return (
+      <a href={deepLink} className="btn-primary text-sm">
+        Buka di MetaMask
+      </a>
+    );
+  }
 
   if (status !== "connected" || !address) {
     const notFound = connect.error instanceof ProviderNotFoundError;
