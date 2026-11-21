@@ -1,6 +1,7 @@
 import {
   BaseError,
   ContractFunctionRevertedError,
+  UnauthorizedProviderError,
   UserRejectedRequestError,
   decodeErrorResult,
   type Hex,
@@ -68,11 +69,41 @@ function decodeRaw(raw: Hex | undefined): { name: string; args: readonly unknown
   }
 }
 
+/** Every message and detail along the cause chain, lower-cased. */
+function chainText(err: BaseError): string {
+  const parts: string[] = [];
+  let e: unknown = err;
+  for (let depth = 0; e instanceof Error && depth < 10; depth++) {
+    parts.push(e.message);
+    if (e instanceof BaseError && e.details) parts.push(e.details);
+    e = e.cause;
+  }
+  return parts.join(" ").toLowerCase();
+}
+
+/** Node / wallet rejections that are not contract reverts. Null when none match. */
+function networkMessage(err: BaseError): string | null {
+  const t = chainText(err);
+  if (/below minimum|underpriced|tip cap|fee too low|max fee per gas less than block base fee/.test(t)) {
+    return "Ditolak jaringan: biaya gas terlalu rendah. Coba lagi; jika berulang, naikkan priority fee di wallet (min. 30 gwei di Amoy).";
+  }
+  if (/insufficient funds/.test(t)) {
+    return "Saldo POL wallet tidak cukup untuk biaya gas.";
+  }
+  if (/internal json-rpc error/.test(t)) {
+    return "Wallet gagal mengirim transaksi ke jaringan (Internal JSON-RPC error). Periksa RPC Amoy di MetaMask lalu coba lagi.";
+  }
+  return null;
+}
+
 /** Turns any viem/wagmi/wallet error into a readable Indonesian message. Never returns hex. */
 export function decodeContractError(err: unknown): string {
   if (err instanceof BaseError) {
     if (err.walk((e) => e instanceof UserRejectedRequestError)) {
       return "Transaksi dibatalkan di wallet";
+    }
+    if (err.walk((e) => e instanceof UnauthorizedProviderError)) {
+      return "Wallet belum mengizinkan akun/jaringan ini untuk situs ini. Di MetaMask: putuskan koneksi situs, pilih akun & jaringan yang benar, lalu hubungkan ulang.";
     }
     const reverted = err.walk((e) => e instanceof ContractFunctionRevertedError);
     if (reverted instanceof ContractFunctionRevertedError) {
@@ -82,8 +113,12 @@ export function decodeContractError(err: unknown): string {
       }
       const fromRaw = decodeRaw(reverted.raw);
       if (fromRaw) return messageForError(fromRaw.name, fromRaw.args);
-      return OUT_OF_RANGE;
     }
+    // Wallets wrap node rejections ("Internal JSON-RPC error") so they can look like a
+    // revert with no data. Check the whole cause chain before blaming the contract.
+    const network = networkMessage(err);
+    if (network) return network;
+    if (reverted) return "Transaksi gagal di jaringan; alasannya tidak dapat dibaca. Coba lagi.";
     const text = `${err.shortMessage} ${err.details ?? ""}`;
     if (/fetch failed|HTTP request failed|ECONNREFUSED|Failed to fetch/i.test(text)) {
       return "Tidak dapat terhubung ke jaringan blockchain. Pastikan node (Anvil/RPC) berjalan.";

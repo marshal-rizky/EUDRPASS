@@ -5,6 +5,7 @@ import type { Address, Hash, TransactionReceipt } from "viem";
 import { useConnection, useSwitchChain } from "wagmi";
 import { chain, publicClient } from "./chain";
 import { decodeContractError } from "./errors";
+import { suggestFees, type FeeOverrides } from "./fees";
 
 export type TxState =
   | { status: "idle" }
@@ -19,8 +20,8 @@ export type TxState =
 type Steps = {
   /** Dry-run via the public RPC. Throw = rejected, MetaMask stays closed. */
   simulate: (account: Address) => Promise<unknown>;
-  /** Opens the wallet and returns the tx hash. */
-  send: () => Promise<Hash>;
+  /** Opens the wallet and returns the tx hash. Spread `fees` into the write call. */
+  send: (fees: FeeOverrides) => Promise<Hash>;
 };
 
 /**
@@ -50,7 +51,7 @@ export function useTx() {
       let hash: Hash;
       try {
         if (chainId !== chain.id) await switchChain({ chainId: chain.id });
-        hash = await send();
+        hash = await send(await suggestFees());
       } catch (e) {
         setState({ status: "failed", message: decodeContractError(e) });
         return null;

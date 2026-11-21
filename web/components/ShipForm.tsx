@@ -70,7 +70,7 @@ export function ShipForm() {
     const args = [ids] as const;
     const receipt = await tx.run({
       simulate: (account) => publicClient.simulateContract({ ...ledger, functionName: "assembleShipment", args, account }),
-      send: () => write({ ...ledger, functionName: "assembleShipment", args, chainId: chain.id }),
+      send: (fees) => write({ ...ledger, functionName: "assembleShipment", args, chainId: chain.id, ...fees }),
     });
     if (!receipt) return;
     const [ev] = parseEventLogs({ abi: ledger.abi, logs: receipt.logs, eventName: "Shipped" });

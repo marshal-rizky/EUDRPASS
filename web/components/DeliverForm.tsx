@@ -51,7 +51,7 @@ export function DeliverForm({ initialPlot }: { initialPlot: string }) {
     const args = [plotId, season, kg] as const;
     const receipt = await tx.run({
       simulate: (account) => publicClient.simulateContract({ ...ledger, functionName: "recordDelivery", args, account }),
-      send: () => write({ ...ledger, functionName: "recordDelivery", args, chainId: chain.id }),
+      send: (fees) => write({ ...ledger, functionName: "recordDelivery", args, chainId: chain.id, ...fees }),
     });
     if (!receipt) return;
 

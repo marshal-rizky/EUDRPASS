@@ -100,7 +100,7 @@ export function RegisterForm() {
     const args = [doc.cid, location.hash, hectaresE2, commodity, declarationId.trim()] as const;
     const receipt = await tx.run({
       simulate: (account) => publicClient.simulateContract({ ...registry, functionName: "registerPlot", args, account }),
-      send: () => write({ ...registry, functionName: "registerPlot", args, chainId: chain.id }),
+      send: (fees) => write({ ...registry, functionName: "registerPlot", args, chainId: chain.id, ...fees }),
     });
     if (!receipt) return;
     const [ev] = parseEventLogs({ abi: registry.abi, logs: receipt.logs, eventName: "PlotRegistered" });
