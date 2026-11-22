@@ -17,6 +17,23 @@ Screenshot aplikasi (diambil dari URL live, untuk materi presentasi) ada di `pre
 | PlotRegistry | [`0x65709b17AB09c8eaA88dA05b1563d1cEa9312b1a`](https://amoy.polygonscan.com/address/0x65709b17AB09c8eaA88dA05b1563d1cEa9312b1a) |
 | DeliveryLedger | [`0xCE46ccD129fC308687804c8E0F3Ca3baE740B6E8`](https://amoy.polygonscan.com/address/0xCE46ccD129fC308687804c8E0F3Ca3baE740B6E8) |
 
+### Yield rate di Amoy
+
+Batas = luas × yield rate kode komoditas, dikunci saat registrasi. Selain angka nasional, kabupaten Gayo punya kode
+sendiri (di-set dengan `setYieldRate`, tanpa deploy ulang). Form registrasi menyarankan kode kabupaten bila
+kabupaten hasil ekstraksi AI cocok; default tetap nasional.
+
+| Kode | Komoditas | kg/ha | Sumber |
+|---|---|---|---|
+| 1 / 2 | Arabika / Robusta, nasional | 877 / 807 | Ditjenbun 2024 |
+| 11 / 21 | Arabika / Robusta, Aceh Tengah | 817 / 535 | BPS Aceh 2022 |
+| 12 / 22 | Arabika / Robusta, Bener Meriah | 941 / 754 | BPS Aceh 2022 |
+| 13 / 23 | Arabika / Robusta, Gayo Lues | 700 / 602 | BPS Aceh 2022 |
+
+Data kabupaten: BPS Aceh, "Rata-rata Produktivitas Kopi Perkebunan Rakyat Menurut Kabupaten/Kota" (OpenData Aceh,
+data.acehprov.go.id, dataset `produksi-kopi-perkebunan-rakyat-menurut-kabupaten-kota`), tahun 2022 (tahun terbaru
+dengan pemisahan arabika/robusta). Label kode ada di `web/lib/contracts.ts`.
+
 Deploy block `53418689`. Data uji di Amoy: plot #2 (1,00 ha arabika, dokumen di IPFS), delivery #1 600 kg,
 shipment #1 → halaman `/verify/1`. Plot #1 memakai CID placeholder dari versi script lama.
 

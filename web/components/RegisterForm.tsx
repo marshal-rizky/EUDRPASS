@@ -7,7 +7,7 @@ import { parseEventLogs } from "viem";
 import { useWriteContract } from "wagmi";
 import { extractDocument, ipfsUrl, uploadDocument, type Extraction, type UploadResult } from "@/lib/api";
 import { chain, publicClient } from "@/lib/chain";
-import { COMMODITIES, registry } from "@/lib/contracts";
+import { COMMODITIES, commodity as commodityInfo, regencyCommodity, registry } from "@/lib/contracts";
 import { fmtHa, fmtKg, fmtNum } from "@/lib/format";
 import { encodeLocation, parseHectaresE2, type LocationMode } from "@/lib/location";
 import { useTx } from "@/lib/useTx";
@@ -60,6 +60,10 @@ export function RegisterForm() {
   const location = locationRaw.trim() ? encodeLocation(mode, locationRaw) : null;
   const capPreview = hectaresE2 !== null && rate.data ? Math.floor((hectaresE2 * rate.data) / 100) : null;
   const pendingReview = (extraction?.needsReview ?? []).filter((f) => !reviewed[f]);
+  const currentCommodity = commodityInfo(commodity);
+  // Suggest the regency's own yield when the extracted regency has one; never switch silently.
+  const suggestion = regencyCommodity(extraction?.fields.regency, commodity);
+  const showSuggestion = suggestion && suggestion.id !== commodity ? suggestion : null;
 
   async function runExtract() {
     if (!file) return;
@@ -187,14 +191,34 @@ export function RegisterForm() {
               Komoditas
             </label>
             <select id="commodity" className="input" value={commodity} onChange={(e) => setCommodity(Number(e.target.value))}>
-              {COMMODITIES.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.label}
-                </option>
-              ))}
+              <optgroup label="Rata-rata nasional">
+                {COMMODITIES.filter((c) => !c.regency).map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.label}
+                  </option>
+                ))}
+              </optgroup>
+              <optgroup label="Per kabupaten (BPS Aceh 2022)">
+                {COMMODITIES.filter((c) => c.regency).map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.label.replace(/^Kopi /, "")}
+                  </option>
+                ))}
+              </optgroup>
             </select>
           </div>
         </section>
+
+        {showSuggestion && (
+          <div className="flex flex-wrap items-center gap-3 rounded-lg border border-leaf-200 bg-leaf-50 px-3 py-2 text-sm">
+            <span className="flex-1 text-leaf-900">
+              Kabupaten <b>{showSuggestion.regency}</b> punya data produktivitas sendiri ({showSuggestion.source}).
+            </span>
+            <button type="button" className="btn-secondary text-sm" onClick={() => setCommodity(showSuggestion.id)}>
+              Pakai yield kabupaten
+            </button>
+          </div>
+        )}
 
         <div>
           <label htmlFor="decl" className="label">
@@ -214,6 +238,7 @@ export function RegisterForm() {
                   ? `${fmtHa(hectaresE2)} × ${fmtNum(rate.data)} kg/ha = ${fmtKg(capPreview)}`
                   : `isi luas · ${fmtNum(rate.data ?? 0)} kg/ha`}
           </p>
+          {currentCommodity && <p className="mt-1 text-xs text-leaf-800">Yield: {currentCommodity.label}, {currentCommodity.source}</p>}
         </div>
 
         {formError && <p className="text-sm text-red-700">{formError}</p>}
